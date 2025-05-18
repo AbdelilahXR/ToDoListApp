@@ -5,12 +5,13 @@ import Todoitems from './Todoitems';
 const Todo = () => {
 
   const inputRef = useRef();
-  const [todo, settodo] = useState([]);
-  const add = ()=>{
+  const [todolist, settodo] = useState([]);
+
+  const add = ()=>{  
      const inputtext = inputRef.current.value.trim(); //trim() delete space   
      console.log(inputtext);
-
-     if (inputtext === "") {
+ 
+     if (inputtext === "") {  
         return null;
      }
 
@@ -20,8 +21,14 @@ const Todo = () => {
         iscompleted: false,
      }
 
-     settodo((prev)=>[...prev, newtodo]);
-     inputRef.current.value  = "";     
+     settodo((prev) => [...prev, newtodo]);
+     inputRef.current.value = "";   
+  }
+
+  const deletetodo = (id)=>{
+      settodo((prevtodo)=> {
+         return prevtodo.filter((todo)=> todo.id !== id );
+      })
   }
 
 
@@ -36,15 +43,18 @@ const Todo = () => {
 
          {/*---- title ----------- */}
          <div className='flex items-center my-7 bg-gray-200 rounded-full '>
-             <input ref={add}  className='bg-transparent border-0 outline-none flex-1 h-12 pl-6 pr-6 placeholder:text-slate-600' type="text" placeholder='Add your text' />
+             <input ref={inputRef}  className='bg-transparent border-0 outline-none flex-1 h-12 pl-6 pr-6 placeholder:text-slate-600' type="text" placeholder='Add your text' />
              <button onClick={add} className='border-none rounded-full bg-orange-600 w-32 h-12 text-white text-lg font-medium cursor-pointer '>ADD +</button>
          </div>
 
 
          {/*---- Todo list ----------- */}
          <div>
-          <Todoitems text={"learn coding"}></Todoitems>
-          <Todoitems text={"learn spanish"}></Todoitems>
+           {todolist.map((item, index) =>  {
+
+            return <Todoitems key={index} text={item.text} id={item.id} iscomplete={item.iscompleted} deletetodo={deletetodo} />})
+            }
+ 
          </div>
 
     </div>
