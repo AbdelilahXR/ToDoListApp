@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import todo_icon from '../assets/todo_icon.png';
 import Todoitems from './Todoitems';
 
@@ -18,7 +18,7 @@ const Todo = () => {
      const newtodo = {
         id : Date.now(),
         text: inputtext,
-        iscompleted: false,
+        iscomplete: false,
      }
 
      settodo((prev) => [...prev, newtodo]);
@@ -26,11 +26,26 @@ const Todo = () => {
   }
 
   const deletetodo = (id)=>{
-      settodo((prevtodo)=> {
-         return prevtodo.filter((todo)=> todo.id !== id );
+      settodo((prevtodos)=> {
+         return prevtodos.filter((todo)=> todo.id !== id );
       })
   }
 
+  //check and unchecked function
+  const toggle = (id)=> {
+      settodo((prevtodos)=>{
+         return prevtodos.map((todo) => {
+            if(todo.id === id){
+               return{...todo, iscomplete: !todo.iscomplete}
+            }
+            return todo;
+         })
+      })
+  }
+
+  useEffect(()=>{
+      console.log(todolist)
+  },[todolist])
 
   return (
     <div className='bg-white place-self-center w-11/12 max-w-md flex flex-col p-7 min-h-[550px] rounded-xl'>
@@ -52,7 +67,7 @@ const Todo = () => {
          <div>
            {todolist.map((item, index) =>  {
 
-            return <Todoitems key={index} text={item.text} id={item.id} iscomplete={item.iscompleted} deletetodo={deletetodo} />})
+            return <Todoitems key={index} text={item.text} id={item.id} iscomplete={item.iscomplete} deletetodo={deletetodo} toggle={toggle}/>})
             }
  
          </div>
